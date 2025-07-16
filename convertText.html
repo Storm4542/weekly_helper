@@ -4,39 +4,39 @@
   <meta charset="UTF-8">
   <title>文字转换器</title>
   <style>
-      body {
-          font-family: Arial, sans-serif;
-          padding: 40px;
-          max-width: 800px;
-          margin: auto;
-      }
-      textarea {
-          width: 100%;
-          height: 150px;
-          margin-bottom: 20px;
-          padding: 10px;
-          font-size: 16px;
-      }
-      button {
-          padding: 10px 20px;
-          font-size: 16px;
-          cursor: pointer;
-          margin-right: 10px;
-      }
-      .output {
-          margin-top: 20px;
-          white-space: pre-wrap;
-          background: #f9f9f9;
-          padding: 10px;
-          border: 1px solid #ccc;
-      }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 20px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .output {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
 
-<h2>文字转换器</h2>
-<p>输入格式如下：</p>
-<pre>
+  <h2>文字转换器</h2>
+  <p>输入格式如下：</p>
+  <pre>
 标题
 1. 事项A
 2、事项B
@@ -44,44 +44,40 @@
 一、事项D
   </pre>
 
-<textarea id="inputText" placeholder="请输入内容..."></textarea>
-<br>
-<button onclick="convertText()">转换</button>
-<button onclick="copyOutput()">复制结果</button>
+  <textarea id="inputText" placeholder="请输入内容..."></textarea>
+  <br>
+  <button onclick="convertText()">转换</button>
+  <button onclick="copyOutput()">复制结果</button>
 
-<div class="output" id="outputText"></div>
+  <div class="output" id="outputText"></div>
 
-<script>
-  function convertText() {
-    const input = document.getElementById('inputText').value.trim();
-    const lines = input.split('\n').map(line => line.trim()).filter(line => line);
+  <script>
+    function convertText() {
+      const input = document.getElementById('inputText').value.trim();
+      const lines = input.split('\n').map(line => line.trim()).filter(line => line);
 
-    if (lines.length === 0) {
-      document.getElementById('outputText').innerText = '请输入有效内容。';
-      return;
+      if (lines.length === 0) {
+        document.getElementById('outputText').innerText = '请输入有效内容。';
+        return;
+      }
+
+      const title = lines[0];
+      const detailLines = lines.slice(1).map(line => {
+        return line.replace(/^[\d一二三四五六七八九十]+[.、：):\s]*/u, '');
+      });
+
+      const result = `${title}：${detailLines.join('；')}；`;
+      document.getElementById('outputText').innerText = result;
     }
 
-    const title = lines[0];
-    const detailLines = lines.slice(1).map(line => {
-      return line.replace(/^[\d一二三四五六七八九十]+[.、：):\s]*/u, '');
-    });
-
-    document.getElementById('outputText').innerText = `${title}：${detailLines.join('；')}`;
-  }
-
-  function copyOutput() {
-    const outputText = document.getElementById('outputText').innerText;
-    if (!outputText) {
-      alert("没有可复制的内容，请先转换。");
-      return;
+    function copyOutput() {
+      const outputText = document.getElementById('outputText').innerText;
+      if (!outputText) return;
+      navigator.clipboard.writeText(outputText).catch(err => {
+        console.error("复制失败：", err);
+      });
     }
-    navigator.clipboard.writeText(outputText).then(() => {
-      // alert("已复制到剪贴板！");
-    }).catch(err => {
-      alert("复制失败：" + err);
-    });
-  }
-</script>
+  </script>
 
 </body>
 </html>
